@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS "usermodules";
+DROP TABLE IF EXISTS "users";

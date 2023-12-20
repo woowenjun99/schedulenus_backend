@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+    postgres:
+        image: postgres:16.1-alpine3.18
+        environment:
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=secret
+            - POSTGRES_DB=test
+        healthcheck:
+            test: pg_isready -U root -d test
+            interval: 10s
+            timeout: 3s
+            retries: 5
+        ports:
+            - "5432:5432"
+        volumes:
+            - data-volume:/var/lib/db/data
+volumes:
+    data-volume:
