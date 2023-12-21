@@ -8,7 +8,7 @@ export class EditUserService {
         private uid: string
   ) {}
 
-  private validate(): void {
+  private async validate(): Promise<void> {
     this.payload = z
         .object({
           email: z.string().email(),
@@ -25,8 +25,8 @@ export class EditUserService {
     }
   }
 
-  public execute(): Promise<void> {
-    this.validate();
+  public async execute(): Promise<void> {
+    await this.validate();
     return editUser(pool, this.payload as EditUserArgs);
   }
 }

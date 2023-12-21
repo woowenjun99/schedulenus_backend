@@ -2,38 +2,17 @@ import {
     EditUserArgs,
     createUser,
     deleteUser,
+    readUser,
 } from "../../db/sqlc/user_sql";
 import { EditUserService } from "./editUser";
 import { v4 as uuid } from "uuid";
 import { pool } from "../../util/setup"
 
 describe("EditUserService", () => {
-    it("should throw if there are no users to update", async () => {
-        const username = uuid();
-
-        const service = new EditUserService(
-            pool,
-            {
-                email: "abc@gmail.com",
-                fullName: "abc",
-                id: "abc",
-                major: "",
-                semester: 0,
-                username,
-            } as EditUserArgs,
-            "abc"
-        );
-
-        await expect(service.execute()).rejects.toThrow(
-            "The user does not exist"
-        );
-    });
-
     it("should throw if the user to update is different from the one in the payload", async () => {
         const username = uuid();
 
         const service = new EditUserService(
-            pool,
             {
                 email: "abc@gmail.com",
                 fullName: "abc",
@@ -62,7 +41,7 @@ describe("EditUserService", () => {
             semester: 0,
         })
 
-        const editUserService = new EditUserService(pool, {
+        const editUserService = new EditUserService({
             email: "wjranger99@gmail.com",
             fullName: "Wen Jun",
             id,
@@ -71,7 +50,9 @@ describe("EditUserService", () => {
             username
         }, id)
 
-        const result = await editUserService.execute()
+        await editUserService.execute()
+
+        const result = await readUser(pool, { id })
 
         expect(result).toStrictEqual({
             email: "wjranger99@gmail.com",

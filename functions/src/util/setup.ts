@@ -8,3 +8,7 @@ export const pool = new Pool({
 beforeAll(async () => {
   await pool.connect();
 });
+
+jest.mock("../db/pool", () => {
+  return { pool }
+})
