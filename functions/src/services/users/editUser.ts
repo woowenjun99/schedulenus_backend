@@ -1,10 +1,9 @@
-import { Pool } from "pg";
+import { pool } from "../../db/pool";
 import { type EditUserArgs, editUser } from "../../db/sqlc/user_sql";
 import { z } from "zod";
 
 export class EditUserService {
   constructor(
-        private pool: Pool,
         private payload: EditUserArgs,
         private uid: string
   ) {}
@@ -28,6 +27,6 @@ export class EditUserService {
 
   public execute(): Promise<void> {
     this.validate();
-    return editUser(this.pool, this.payload as EditUserArgs);
+    return editUser(pool, this.payload as EditUserArgs);
   }
 }

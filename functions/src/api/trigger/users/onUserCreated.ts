@@ -1,16 +1,12 @@
 import * as functions from "firebase-functions";
-import { Pool } from "pg";
 import { type CreateUserArgs, createUser } from "../../../db/sqlc/user_sql";
+import { pool } from "../../../db/pool";
 
 export const onUserCreatedFunction = functions
     .region("asia-southeast1")
     .auth.user()
     .onCreate(async (user) => {
       try {
-        const pool: Pool = new Pool({
-          connectionString: process.env.DATABASE_URL,
-        });
-
         await createUser(pool, {
           id: user.uid,
           email: user.email,

@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { Pool } from "pg";
+import { pool } from "../../db/pool";
 
 /**
  * A wrapper over the https cloud functions. Override the execute
@@ -7,10 +7,9 @@ import { Pool } from "pg";
  */
 export abstract class HttpWrapper {
     abstract execute(
-        pool: Pool,
         payload: unknown,
         context: functions.https.CallableContext
-    ): Promise<object> | Promise<void>;
+    ): Promise<object | void | null>;
 
     get firebaseFunctions() {
       return functions
@@ -20,13 +19,8 @@ export abstract class HttpWrapper {
                   payload: unknown,
                   context: functions.https.CallableContext
               ) => {
-                const pool = new Pool({
-                  connectionString: process.env.DATABASE_URL,
-                });
-
                 try {
                   const result = await this.execute(
-                      pool,
                       payload,
                       context,
                   );
