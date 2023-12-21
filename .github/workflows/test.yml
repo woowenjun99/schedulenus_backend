@@ -1,0 +1,55 @@
+name: Run unit tests
+
+on:
+    push:
+        branches:
+            - "*"
+    pull_request:
+        branches:
+            - "*"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:14-alpine
+                env:
+                    POSTGRES_USER: root
+                    POSTGRES_PASSWORD: secret
+                    POSTGRES_DB: test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Node 16
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+
+            - name: Run yarn install
+              uses: borales/actions-yarn@v4
+              with:
+                  cmd: install --frozen-lockfile
+                  dir: functions
+
+            - name: Install golang-migrate
+              run: |
+                  curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
+                  sudo mv migrate.linux-amd64 /usr/bin/migrate
+                  which migrate
+
+            - name: Run migrations
+              run: migrate -path functions/src/db/migration -database "postgresql://root:secret@localhost:5432/test?sslmode=disable" up
+
+            - name: Run tests
+              uses: borales/actions-yarn@v4
+              with:
+                  cmd: test --coverage
+                  dir: functions
