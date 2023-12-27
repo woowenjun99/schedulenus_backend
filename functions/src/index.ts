@@ -5,5 +5,12 @@ import {
 import {
   onUserDeletedFunction as onUserDeleted,
 } from "./api/trigger/users/onUserDeleted";
+import { getUserFunction as getUser } from "./api/http/users/getUser";
 
-export { editUser, onUserCreated, onUserDeleted };
+export {
+  // User services
+  editUser,
+  getUser,
+  onUserCreated,
+  onUserDeleted,
+};

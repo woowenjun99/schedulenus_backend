@@ -25,7 +25,6 @@ export abstract class HttpWrapper {
                       context,
                   );
 
-                  pool.end();
                   return { success: true, ...result };
                 } catch (e) {
                   pool.end();

@@ -10,5 +10,5 @@ beforeAll(async () => {
 });
 
 jest.mock("../db/pool", () => {
-  return { pool }
-})
+  return { pool };
+});
