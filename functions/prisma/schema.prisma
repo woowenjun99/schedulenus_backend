@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://root:secret@localhost:5432/test?sslmode=disable"
+}
+
+model schema_migrations {
+  version BigInt  @id
+  dirty   Boolean
+}
+
+model usermodules {
+  grades         Float? @db.Real
+  module_code    String
+  semester_taken Int
+  user_id        String
+  users          users  @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, module_code])
+}
+
+model users {
+  id                  String        @id
+  email               String        @unique
+  full_name           String
+  has_completed_setup Boolean       @default(false)
+  major               String
+  semester            Int
+  username            String?       @unique
+  usermodules         usermodules[]
+}
