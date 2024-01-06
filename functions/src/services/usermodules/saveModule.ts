@@ -7,7 +7,7 @@ import {
 import { pool } from "../../db/pool";
 import { z } from "zod";
 
-type SaveModuleServiceRequest = Readonly<{
+export type SaveModuleServiceRequest = Readonly<{
   moduleCode: string
   semesterTaken: number
 }>
