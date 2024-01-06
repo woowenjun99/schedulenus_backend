@@ -75,5 +75,12 @@ describe("EditUserService", () => {
         expect(module?.moduleCode).toStrictEqual("CS2040C")
         expect(module?.grades).toBeNull()
         expect(module?.userId).toStrictEqual(id)
+
+        await deleteModule(pool, {
+            moduleCode: "CS2040C",
+            userId: id,
+        })
+
+        await deleteUser(pool, { id })
     });
 });
